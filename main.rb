@@ -7,12 +7,24 @@ srand(129)
 
 grid_size = 100 # Changed as Required in README.md
 
+MULTIPLAYER = 'multi_player'.freeze
+SINGLEPLAYER = 'single_player'.freeze
+
 your_strategy = -> {
-  game = Game.new(grid_size: grid_size)
+  mode = SINGLEPLAYER
+  if mode == MULTIPLAYER
+    players = PLAYER_COUNT.times.map do |i|
+      MultiPlayer.new(game: game, name: "Player #{i+1}", player_count: PLAYER_COUNT)
+    end
 
-  you = YourPlayer.new(game: game, name: 'Sevian Arivyartha')
+    players.each { |player| game.add_player(player) }
+  else
+    game = Game.new(grid_size: grid_size)
 
-  game.add_player(you)
+    you = YourPlayer.new(game: game, name: 'Sevian Arivyartha')
+
+    game.add_player(you)
+  end
 
   game.start
 }
